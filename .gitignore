@@ -1,0 +1,5 @@
+/*.vshost.*
+/*.pdb
+/Sources/obj
+/Sources/*.suo
+SteamLibraryManager.exe

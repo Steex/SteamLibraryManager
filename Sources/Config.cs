@@ -14,6 +14,7 @@ namespace SteamLibraryManager
 	public class Config
 	{
 		private static readonly string registryRootName = @"Software\SteexSoft\SteamLibraryManager";
+		private static readonly string registrySteamRoot = @"Software\Valve\Steam";
 
 
 		// Steam location.
@@ -49,6 +50,21 @@ namespace SteamLibraryManager
 			Main = config.Clone();
 		}
 
+
+		public void Init()
+		{
+			if (Registry.CurrentUser.OpenSubKey(registryRootName) != null)
+			{
+				Load();
+				return;
+			}
+
+			// Steam location.
+			SteamPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", "");
+
+			// All done.
+			Save();
+		}
 
 		public void Load()
 		{

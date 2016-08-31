@@ -11,7 +11,8 @@ namespace SteamLibraryManager
 		public string Library { get; private set; }
 		public string Id { get; private set; }
 		public string Name { get; private set; }
-		public string Directory { get; private set; }
+		public string InstallDir { get; private set; }
+		public long Size { get; private set; }
 
 		public SteamApp(string library, string manifestFile)
 		{
@@ -22,7 +23,11 @@ namespace SteamLibraryManager
 
 			Id = manifest["AppID"].AsString();
 			Name = manifest["name"].AsString();
-			Directory = manifest["installdir"].AsString();
+			InstallDir = manifest["installdir"].AsString();
+
+			string installPath = Path.Combine(library, "steamapps\\common", InstallDir);
+			DirectoryInfo installDirectory = new DirectoryInfo(installPath);
+			Size = installDirectory.EnumerateFiles("*.*", SearchOption.AllDirectories).Aggregate(0L, (s, f) => s += f.Length);
 		}
 	}
 }

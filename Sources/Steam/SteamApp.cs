@@ -11,15 +11,18 @@ namespace SteamLibraryManager
 		public string Library { get; private set; }
 		public string Id { get; private set; }
 		public string Name { get; private set; }
+		public string Directory { get; private set; }
 
 		public SteamApp(string library, string manifestFile)
 		{
 			Library = library;
 
 			string manifestPath = Path.Combine(library, "steamapps", manifestFile);
-			string manifestData = File.ReadAllText(manifestPath, Encoding.UTF8);
+			SteamKeyValue manifest = SteamKeyValue.LoadFromFile(manifestPath);
 
-			//Id = id
+			Id = manifest["AppID"].AsString();
+			Name = manifest["name"].AsString();
+			Directory = manifest["installdir"].AsString();
 		}
 	}
 }

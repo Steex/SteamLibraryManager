@@ -15,7 +15,10 @@ namespace SteamLibraryManager
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+
+			Config.Main.Load();
 			Application.Run(new MainForm());
+			Config.Main.Save();
 		}
 	}
 }

@@ -17,6 +17,7 @@ namespace SteamLibraryManager
 		public MainForm()
 		{
 			InitializeComponent();
+			InitializeActions();
 		}
 	}
 }

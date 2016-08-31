@@ -7,6 +7,8 @@ using System.IO;
 // The parser is based on source code of SteamKit project
 // (https://github.com/SteamRE/SteamKit)
 // See the license in /License/SteamKit.txt
+//
+// KeyValue file format is described here: https://developer.valvesoftware.com/wiki/KeyValues
 
 namespace SteamLibraryManager
 {

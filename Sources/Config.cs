@@ -14,7 +14,6 @@ namespace SteamLibraryManager
 	public class Config
 	{
 		private static readonly string registryRootName = @"Software\SteexSoft\SteamLibraryManager";
-		private static readonly string registrySteamRoot = @"Software\Valve\Steam";
 
 
 		// Steam location.

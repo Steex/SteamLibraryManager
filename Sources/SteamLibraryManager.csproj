@@ -66,6 +66,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Steam\SteamConfigParser.cs" />
+    <Compile Include="Steam\SteamApp.cs" />
+    <Compile Include="Steam\SteamData.cs" />
+    <Compile Include="Steam\SteamLibrary.cs" />
     <Compile Include="Utils\Actions.cs" />
     <Compile Include="Utils\InvariantConverter.cs" />
     <Compile Include="Utils\Logger.cs" />

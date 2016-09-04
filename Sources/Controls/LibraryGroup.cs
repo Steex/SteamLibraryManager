@@ -52,7 +52,6 @@ namespace SteamLibraryManager.Controls
 			// Create new library views.
 			if (libraries != null)
 			{
-				//for (int col = 0; col < libraries.Count; ++col)
 				foreach (SteamLibrary library in Libraries)
 				{
 					layout.ColumnCount += 1;
@@ -72,6 +71,7 @@ namespace SteamLibraryManager.Controls
 			libraryView.Parent = layout;
 			libraryView.Dock = DockStyle.Fill;
 			libraryView.Margin = new Padding(3, 3, 0, 3);
+
 			return libraryView;
 		}
 	}

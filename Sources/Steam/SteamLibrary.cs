@@ -8,12 +8,14 @@ namespace SteamLibraryManager
 {
 	public class SteamLibrary
 	{
+		public string Name { get; private set; }
 		public string Path { get; private set; }
 		public List<SteamApp> Apps;
 
 		public SteamLibrary(string path)
 		{
-			Path = path;
+			Name = path;
+			Path = System.IO.Path.Combine(path, "steamapps");
 
 			// Read applications information.
 			Apps = new List<SteamApp>();

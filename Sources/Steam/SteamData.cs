@@ -20,18 +20,19 @@ namespace SteamLibraryManager
 
 			// Init the main library.
 			Libraries = new List<SteamLibrary>();
-			Libraries.Add(new SteamLibrary(Path.Combine(installDir, "steamapps")));
+			Libraries.Add(new SteamLibrary(installDir));
 
 			// Init additional libraries.
 			try
 			{
 				SteamKeyValue libraryConfig = SteamKeyValue.LoadFromFile(Path.Combine(installDir, "steamapps\\libraryfolders.vdf"));
+
 				for (int i = 1; ; ++i)
 				{
-					SteamKeyValue libraryData = libraryConfig.Children.Find(kv => kv.Name == i.ToString());
-					if (libraryData != null)
+					SteamKeyValue libraryData = libraryConfig[i.ToString()];
+					if (libraryData != SteamKeyValue.Invalid)
 					{
-						Libraries.Add(new SteamLibrary(Path.Combine(libraryData.Value, "steamapps")));
+						Libraries.Add(new SteamLibrary(libraryData.Value));
 					}
 					else
 					{

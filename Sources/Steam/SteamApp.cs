@@ -21,10 +21,19 @@ namespace SteamLibraryManager
 			string manifestPath = Path.Combine(library.Path, manifestFile);
 			SteamKeyValue manifest = SteamKeyValue.LoadFromFile(manifestPath);
 
+			// Read base settings.
 			Id = manifest["AppID"].AsString();
 			Name = manifest["name"].AsString();
 			InstallDir = manifest["installdir"].AsString();
 
+			// Override with user settings.
+			string userSpecificName = manifest["UserConfig"]["name"].Value;
+			if (!string.IsNullOrWhiteSpace(userSpecificName))
+			{
+				Name = userSpecificName;
+			}
+
+			// Calculate disk size.
 			string installPath = Path.Combine(library.Path, "common", InstallDir);
 			DirectoryInfo installDirectory = new DirectoryInfo(installPath);
 			Size = installDirectory.EnumerateFiles("*.*", SearchOption.AllDirectories).Aggregate(0L, (s, f) => s += f.Length);

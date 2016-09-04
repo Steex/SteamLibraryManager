@@ -19,7 +19,7 @@ namespace SteamLibraryManager
 			InitializeComponent();
 			InitializeActions();
 
-			SteamApp a = new SteamApp("D:\\Games\\Steam", "appmanifest_16450.acf");
+			SteamData steamData = new SteamData(Config.Main.SteamPath);
 		}
 	}
 }

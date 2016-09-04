@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Drawing.Imaging;
 using Microsoft.Win32;
 
@@ -60,6 +61,7 @@ namespace SteamLibraryManager
 
 			// Steam location.
 			SteamPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", "");
+			SteamPath = Path.GetFullPath(SteamPath);
 
 			// All done.
 			Save();

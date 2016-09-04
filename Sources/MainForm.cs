@@ -8,7 +8,6 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Net;
-using System.Text.RegularExpressions;
 
 namespace SteamLibraryManager
 {

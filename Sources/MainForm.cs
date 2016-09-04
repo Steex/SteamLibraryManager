@@ -20,6 +20,7 @@ namespace SteamLibraryManager
 			InitializeActions();
 
 			SteamData steamData = new SteamData(Config.Main.SteamPath);
+			libraryView.Libraries = steamData.Libraries;
 		}
 	}
 }

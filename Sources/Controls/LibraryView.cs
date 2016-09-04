@@ -15,7 +15,7 @@ namespace SteamLibraryManager.Controls
 		/// <summary>
 		/// Adapter of a Steam application to display with DataGridView
 		/// </summary>
-		public class GridViewItem
+		private class GridViewItem
 		{
 			[Browsable(false)]
 			public SteamApp App { get; private set; }
@@ -30,7 +30,22 @@ namespace SteamLibraryManager.Controls
 			}
 		}
 
+
+		private class AppListDragData
+		{
+			public LibraryView Origin { get; private set; }
+			public List<SteamApp> Apps { get; private set; }
+
+			public AppListDragData(LibraryView origin)
+			{
+				Origin = origin;
+				Apps = new List<SteamApp>();
+			}
+		}
+
+
 		private BindingList<GridViewItem> gridViewItems;
+		private Rectangle dragBoxFromMouseDown;
 
 
 		public SteamLibrary Library { get; private set; }
@@ -70,6 +85,8 @@ namespace SteamLibraryManager.Controls
 			dataGrid.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 			dataGrid.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 			dataGrid.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+			dataGrid.ClearSelection();
 		}
 
 		private void dataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -80,6 +97,91 @@ namespace SteamLibraryManager.Controls
 			}
 		}
 
+		private void dataGrid_MouseDown(object sender, MouseEventArgs e)
+		{
+			dragBoxFromMouseDown = Rectangle.Empty;
+			if (e.Button == MouseButtons.Left && ModifierKeys == Keys.None)
+			{
+				// Get the index of the item the mouse is below.
+				var hitInfo = dataGrid.HitTest(e.X, e.Y);
+
+				if (hitInfo.Type == DataGridViewHitTestType.Cell)
+				{
+					// Create a rectangle using the DragSize, with the mouse position being
+					// at the center of the rectangle.
+					Size dragSize = SystemInformation.DragSize;
+					dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2), e.Y - (dragSize.Height / 2)), dragSize);
+				}
+			}
+		}
+
+		private void dataGrid_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (e.Button.HasFlag(MouseButtons.Left))
+			{
+				// If the mouse moves outside the rectangle, start the drag.
+				if (dragBoxFromMouseDown != Rectangle.Empty && !dragBoxFromMouseDown.Contains(e.X, e.Y))
+				{
+					dataGrid.PreventSelectionChange();
+
+					// Prepare drag-n-drop data.
+					AppListDragData dragData = new AppListDragData(this);
+					foreach (DataGridViewRow selectedRow in dataGrid.SelectedRows)
+					{
+						dragData.Apps.Add((selectedRow.DataBoundItem as GridViewItem).App);
+					}
+
+					// Start drag-n-drop operation.
+					if (dataGrid.DoDragDrop(dragData, DragDropEffects.Move) == DragDropEffects.Move)
+					{
+						// In case of successful move clear the moved items from the library.
+						foreach (SteamApp movedApp in dragData.Apps)
+						{
+							gridViewItems.Remove(gridViewItems.First(i => i.App == movedApp));
+						}
+						
+						// Suppress the automatic selection.
+						dataGrid.ClearSelection();
+					}
+				}
+			}
+		}
+
+		private void dataGrid_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(typeof(AppListDragData)))
+			{
+				AppListDragData dragData = (AppListDragData)e.Data.GetData(typeof(AppListDragData));
+				if (dragData.Origin != this)
+				{
+					e.Effect = DragDropEffects.Move;
+				}
+			}
+		}
+
+		private void dataGrid_DragDrop(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(typeof(AppListDragData)))
+			{
+				AppListDragData dragData = (AppListDragData)e.Data.GetData(typeof(AppListDragData));
+
+				if (dragData.Origin != this)
+				{
+					e.Effect = DragDropEffects.Move;
+
+					// Determine an insert position.
+					Point clientPoint = dataGrid.PointToClient(new Point(e.X, e.Y));
+					var hitInfo = dataGrid.HitTest(clientPoint.X, clientPoint.Y);
+					int insertIndex = hitInfo.RowIndex >= 0 ? hitInfo.RowIndex : gridViewItems.Count;
+
+					// Insert the dragging items into the found position.
+					foreach (SteamApp app in dragData.Apps.Reverse<SteamApp>())
+					{
+						gridViewItems.Insert(insertIndex, new GridViewItem(app));
+					}
+				}
+			}
+		}
 
 	}
 }

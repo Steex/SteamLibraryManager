@@ -126,6 +126,7 @@
 			// 
 			// dataGrid
 			// 
+			this.dataGrid.AllowDrop = true;
 			this.dataGrid.AllowUserToAddRows = false;
 			this.dataGrid.AllowUserToDeleteRows = false;
 			this.dataGrid.AllowUserToResizeColumns = false;
@@ -147,6 +148,10 @@
 			this.dataGrid.Size = new System.Drawing.Size(280, 24);
 			this.dataGrid.TabIndex = 4;
 			this.dataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGrid_CellFormatting);
+			this.dataGrid.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGrid_DragDrop);
+			this.dataGrid.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGrid_DragEnter);
+			this.dataGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGrid_MouseDown);
+			this.dataGrid.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dataGrid_MouseMove);
 			// 
 			// LibraryView
 			// 

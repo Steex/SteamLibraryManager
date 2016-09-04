@@ -517,5 +517,12 @@ namespace SteamLibraryManager
 			// Nothing is found.
 			return "";
 		}
+
+
+		public static string FormatGbSize(long size)
+		{
+			double gbSize = size / 1024.0 / 1024.0 / 1024.0;
+			return string.Format("{0:.00} GB", gbSize);
+		}
 	}
 }

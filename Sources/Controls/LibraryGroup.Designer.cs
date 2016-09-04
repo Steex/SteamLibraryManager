@@ -33,12 +33,12 @@
 			// 
 			// layout
 			// 
-			this.layout.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
 			this.layout.ColumnCount = 1;
 			this.layout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.layout.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.layout.Location = new System.Drawing.Point(0, 0);
 			this.layout.Name = "layout";
+			this.layout.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
 			this.layout.RowCount = 1;
 			this.layout.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.layout.Size = new System.Drawing.Size(552, 352);

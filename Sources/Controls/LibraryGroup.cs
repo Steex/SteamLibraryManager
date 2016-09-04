@@ -59,20 +59,19 @@ namespace SteamLibraryManager.Controls
 					layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / libraries.Count));
 
 					// Create library view.
-					Control libraryView = CreateLibraryView(library);
+					LibraryView libraryView = CreateLibraryView(library);
 					layout.SetColumn(libraryView, layout.ColumnCount - 1);
 				}
 			}
 		}
 
 
-		Random r = new Random();
-		private Control CreateLibraryView(SteamLibrary library)
+		private LibraryView CreateLibraryView(SteamLibrary library)
 		{
-			Control libraryView = new Control();
+			LibraryView libraryView = new LibraryView(library);
 			libraryView.Parent = layout;
-			libraryView.BackColor = Color.FromArgb(r.Next(256), r.Next(256), r.Next(256));
 			libraryView.Dock = DockStyle.Fill;
+			libraryView.Margin = new Padding(3, 3, 0, 3);
 			return libraryView;
 		}
 	}

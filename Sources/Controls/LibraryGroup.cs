@@ -11,20 +11,20 @@ namespace SteamLibraryManager.Controls
 {
 	public partial class LibraryGroup : UserControl
 	{
-		private IList<SteamLibrary> libraries;
+		private SteamData steamData;
 
-		public IList<SteamLibrary> Libraries
+		public SteamData SteamData
 		{
 			get
 			{
-				return libraries;
+				return steamData;
 			}
 			set
 			{
-				if (libraries != value)
+				if (steamData != value)
 				{
-					libraries = value;
-					OnLibrariesChanged();
+					steamData = value;
+					OnSteamDataChanged();
 				}
 			}
 		}
@@ -40,7 +40,7 @@ namespace SteamLibraryManager.Controls
 		}
 
 
-		protected virtual void OnLibrariesChanged()
+		protected virtual void OnSteamDataChanged()
 		{
 			// Remove the existing views.
 			if (layout.ColumnCount > 0)
@@ -50,12 +50,12 @@ namespace SteamLibraryManager.Controls
 			}
 
 			// Create new library views.
-			if (libraries != null)
+			if (steamData != null)
 			{
-				foreach (SteamLibrary library in Libraries)
+				foreach (SteamLibrary library in steamData.Libraries)
 				{
 					layout.ColumnCount += 1;
-					layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / libraries.Count));
+					layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / steamData.Libraries.Count));
 
 					// Create library view.
 					LibraryView libraryView = CreateLibraryView(library);
@@ -67,7 +67,7 @@ namespace SteamLibraryManager.Controls
 
 		private LibraryView CreateLibraryView(SteamLibrary library)
 		{
-			LibraryView libraryView = new LibraryView(library);
+			LibraryView libraryView = new LibraryView(SteamData, library);
 			libraryView.Parent = layout;
 			libraryView.Dock = DockStyle.Fill;
 			libraryView.Margin = new Padding(3, 3, 0, 3);

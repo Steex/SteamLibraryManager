@@ -108,10 +108,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.libraryView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.libraryView.Libraries = null;
 			this.libraryView.Location = new System.Drawing.Point(95, 119);
 			this.libraryView.Name = "libraryView";
 			this.libraryView.Size = new System.Drawing.Size(552, 352);
+			this.libraryView.SteamData = null;
 			this.libraryView.TabIndex = 2;
 			// 
 			// MainForm

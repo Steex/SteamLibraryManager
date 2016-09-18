@@ -12,6 +12,7 @@ namespace SteamLibraryManager
 
 
 		public List<SteamLibrary> Libraries { get; private set; }
+		public List<SteamApp> Apps{ get; private set; }
 
 
 		public SteamData(string installDir)
@@ -43,6 +44,17 @@ namespace SteamLibraryManager
 			catch
 			{
 				// TODO: Process exception.
+			}
+
+			// Read applications information.
+			Apps = new List<SteamApp>();
+
+			foreach (SteamLibrary library in Libraries)
+			{
+				foreach (string manifestPath in Directory.GetFiles(library.Path, "appmanifest_*.acf"))
+				{
+					Apps.Add(new SteamApp(library, System.IO.Path.GetFileName(manifestPath)));
+				}
 			}
 		}
 	}

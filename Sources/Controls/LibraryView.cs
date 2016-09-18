@@ -48,20 +48,24 @@ namespace SteamLibraryManager.Controls
 		private Rectangle dragBoxFromMouseDown;
 
 
+		private SteamData SteamData { get; set; }
 		public SteamLibrary Library { get; private set; }
 
 
-		public LibraryView(SteamLibrary library)
+		public LibraryView(SteamData steamData, SteamLibrary library)
 		{
 			InitializeComponent();
 
+			SteamData = steamData;
 			Library = library;
+
+			IEnumerable<SteamApp> libraryApps = SteamData.Apps.Where(a => a.Library == Library);
 
 			// Init labels.
 			long totalSize = 0;
 			int totalCount = 0;
 
-			foreach (SteamApp app in Library.Apps)
+			foreach (SteamApp app in libraryApps)
 			{
 				totalSize += app.Size;
 				totalCount += 1;
@@ -71,11 +75,10 @@ namespace SteamLibraryManager.Controls
 			labelCurrentCount.Text = string.Format("{0} app(s)", totalCount);
 			labelCurrentSize.Text = Utils.FormatGbSize(totalSize);
 
-
 			// Init grid
 			gridViewItems = new BindingList<GridViewItem>();
 
-			foreach (SteamApp app in Library.Apps)
+			foreach (SteamApp app in libraryApps)
 			{
 				gridViewItems.Add(new GridViewItem(app));
 			}

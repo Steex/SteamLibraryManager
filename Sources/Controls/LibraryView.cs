@@ -173,8 +173,11 @@ namespace SteamLibraryManager.Controls
 					e.Effect = DragDropEffects.Move;
 
 					// Determine an insert position.
+					// The height offset is applying to attain more natural inserting behavior:
+					// items are insert into nearest line between rows.
 					Point clientPoint = dataGrid.PointToClient(new Point(e.X, e.Y));
-					var hitInfo = dataGrid.HitTest(clientPoint.X, clientPoint.Y);
+					int heightOffset = dataGrid.Rows.Count > 0 ? dataGrid.Rows[0].Height / 2 : 0;
+					var hitInfo = dataGrid.HitTest(clientPoint.X, clientPoint.Y + heightOffset);
 					int insertIndex = hitInfo.RowIndex >= 0 ? hitInfo.RowIndex : gridViewItems.Count;
 
 					// Insert the dragging items into the found position.

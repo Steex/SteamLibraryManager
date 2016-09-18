@@ -8,7 +8,8 @@ namespace SteamLibraryManager
 {
 	public class SteamApp
 	{
-		public SteamLibrary Library { get; private set; }
+		public SteamLibrary OriginalLibrary { get; private set; }
+		public SteamLibrary TargetLibrary { get; set; }
 		public string Id { get; private set; }
 		public string Name { get; private set; }
 		public string InstallDir { get; private set; }
@@ -16,7 +17,8 @@ namespace SteamLibraryManager
 
 		public SteamApp(SteamLibrary library, string manifestFile)
 		{
-			Library = library;
+			OriginalLibrary = library;
+			TargetLibrary = library;
 
 			string manifestPath = Path.Combine(library.Path, manifestFile);
 			SteamKeyValue manifest = SteamKeyValue.LoadFromFile(manifestPath);

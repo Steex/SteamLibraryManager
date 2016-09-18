@@ -59,7 +59,7 @@ namespace SteamLibraryManager.Controls
 			SteamData = steamData;
 			Library = library;
 
-			IEnumerable<SteamApp> libraryApps = SteamData.Apps.Where(a => a.Library == Library);
+			IEnumerable<SteamApp> libraryApps = SteamData.Apps.Where(a => a.OriginalLibrary == Library);
 
 			// Init labels.
 			long totalSize = 0;
@@ -92,9 +92,12 @@ namespace SteamLibraryManager.Controls
 			dataGrid.ClearSelection();
 		}
 
+
 		private void dataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			if (e.RowIndex == 2)
+			SteamApp app = gridViewItems[e.RowIndex].App;
+
+			if (app.TargetLibrary != app.OriginalLibrary)
 			{
 				e.CellStyle.ForeColor = Color.Red;
 			}
@@ -184,6 +187,19 @@ namespace SteamLibraryManager.Controls
 					foreach (SteamApp app in dragData.Apps.Reverse<SteamApp>())
 					{
 						gridViewItems.Insert(insertIndex, new GridViewItem(app));
+					}
+
+					// Select the moved rows.
+					dataGrid.ClearSelection();
+					for (int i = insertIndex; i < insertIndex + dragData.Apps.Count; ++i)
+					{
+						dataGrid.Rows[insertIndex].Selected = true;
+					}
+
+					// Change the target library.
+					foreach (SteamApp app in dragData.Apps.Reverse<SteamApp>())
+					{
+						app.TargetLibrary = Library;
 					}
 				}
 			}

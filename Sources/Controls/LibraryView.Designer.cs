@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.layout = new System.Windows.Forms.TableLayoutPanel();
 			this.panelHeader = new System.Windows.Forms.Panel();
 			this.labelNewSize = new System.Windows.Forms.Label();
@@ -35,6 +36,8 @@
 			this.labelNewCount = new System.Windows.Forms.Label();
 			this.labelCurrentCount = new System.Windows.Forms.Label();
 			this.labelPath = new System.Windows.Forms.Label();
+			this.cellTooltipTimer = new System.Windows.Forms.Timer(this.components);
+			this.cellTooltip = new System.Windows.Forms.ToolTip(this.components);
 			this.dataGrid = new SteamLibraryManager.Controls.DataGridViewEx();
 			this.layout.SuspendLayout();
 			this.panelHeader.SuspendLayout();
@@ -124,6 +127,11 @@
 			this.labelPath.TabIndex = 0;
 			this.labelPath.Text = "<Path>";
 			// 
+			// cellTooltipTimer
+			// 
+			this.cellTooltipTimer.Interval = 1000;
+			this.cellTooltipTimer.Tick += new System.EventHandler(this.tooltipTimer_Tick);
+			// 
 			// dataGrid
 			// 
 			this.dataGrid.AllowDrop = true;
@@ -145,9 +153,14 @@
 			this.dataGrid.RowTemplate.Height = 18;
 			this.dataGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.dataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGrid.ShowCellToolTips = false;
 			this.dataGrid.Size = new System.Drawing.Size(280, 24);
 			this.dataGrid.TabIndex = 4;
 			this.dataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGrid_CellFormatting);
+			this.dataGrid.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellMouseEnter);
+			this.dataGrid.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellMouseLeave);
+			this.dataGrid.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGrid_CellMouseMove);
+			this.dataGrid.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.dataGrid_CellToolTipTextNeeded);
 			this.dataGrid.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGrid_DragDrop);
 			this.dataGrid.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGrid_DragEnter);
 			this.dataGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGrid_MouseDown);
@@ -178,5 +191,7 @@
 		private System.Windows.Forms.Label labelNewCount;
 		private System.Windows.Forms.Label labelNewSize;
 		private DataGridViewEx dataGrid;
+		private System.Windows.Forms.Timer cellTooltipTimer;
+		private System.Windows.Forms.ToolTip cellTooltip;
 	}
 }

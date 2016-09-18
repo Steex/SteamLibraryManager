@@ -46,6 +46,9 @@ namespace SteamLibraryManager.Controls
 
 		private BindingList<GridViewItem> gridViewItems;
 		private Rectangle dragBoxFromMouseDown;
+		private int cellTooltipRow;
+		private Size cellTooltipSize;
+		private bool cellTooltipVisible = false;
 
 
 		private SteamData SteamData { get; set; }
@@ -205,5 +208,79 @@ namespace SteamLibraryManager.Controls
 			}
 		}
 
+		private void dataGrid_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+		{
+			// Make sure the cursor is over the grid (fix some problems with drag-n-drop).
+			if (!dataGrid.Bounds.Contains(dataGrid.Parent.PointToClient(MousePosition)))
+			{
+				return;
+			}
+
+			// Wait for some time before displaying tooltip.
+			cellTooltipRow = e.RowIndex;
+			cellTooltipTimer.Start();
+		}
+
+		private void dataGrid_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+		{
+			// Prevent tooltip from displaying.
+			cellTooltipTimer.Stop();
+
+			// Hide the currently visible tooltip.
+			if (cellTooltipVisible)
+			{
+				cellTooltipVisible = false;
+				cellTooltip.Hide(dataGrid);
+			}
+		}
+
+		private void dataGrid_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+		{
+			// Make sure the cursor is over the grid (fix some problems with drag-n-drop).
+			if (!dataGrid.Bounds.Contains(dataGrid.Parent.PointToClient(MousePosition)))
+			{
+				return;
+			}
+
+			// If tooltip is not displayed, reset the waiting time.
+			if (!cellTooltipVisible)
+			{
+				cellTooltipTimer.Stop();
+				cellTooltipTimer.Start();
+			}
+		}
+
+		private void tooltipTimer_Tick(object sender, EventArgs e)
+		{
+			if (!cellTooltipVisible)
+			{
+				// Stop the timer.
+				cellTooltipTimer.Stop();
+
+				// Acknowledge the displaying.
+				cellTooltipVisible = true;
+
+				// Determine tooltip params.
+				SteamApp app = gridViewItems[cellTooltipRow].App;
+				string tooltipText = app.Name + "\r\n" + app.OriginalLibrary.Name;
+				int tooltipX = dataGrid.PointToClient(Cursor.Position).X;
+				int tooltipY = dataGrid.GetRowDisplayRectangle(cellTooltipRow, false).Top;
+
+				// Fake the tooltip display and measure size.
+				cellTooltip.Popup += cellTooltip_FakePopup;
+				cellTooltip.Show(tooltipText, dataGrid, tooltipX, tooltipY);
+				cellTooltip.Popup -= cellTooltip_FakePopup;
+
+				// Actually display the tooltip in the corrected position.
+				cellTooltip.Show(tooltipText, dataGrid, tooltipX, tooltipY - cellTooltipSize.Height);
+			}
+		}
+
+		private void cellTooltip_FakePopup(object sender, PopupEventArgs e)
+		{
+			// Remember the size and prevent the tooltip from displaying.
+			cellTooltipSize = e.ToolTipSize;
+			e.Cancel = true;
+		}
 	}
 }

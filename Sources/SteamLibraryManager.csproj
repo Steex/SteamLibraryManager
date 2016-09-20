@@ -79,6 +79,7 @@
     <Compile Include="OptionsForm.designer.cs">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PlatformUtils\Windows\SymbolicLink.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Steam\SteamKeyValue.cs" />
@@ -88,6 +89,9 @@
     <Compile Include="Utils\Actions.cs" />
     <Compile Include="Utils\InvariantConverter.cs" />
     <Compile Include="Utils\Logger.cs" />
+    <Compile Include="PlatformUtils\Windows\PlatformUtilsImplWindows.cs" />
+    <Compile Include="PlatformUtils\PlatformUtilsImplInterface.cs" />
+    <Compile Include="PlatformUtils\PlatformUtils.cs" />
     <Compile Include="Utils\Utils.cs" />
     <EmbeddedResource Include="Controls\LibraryGroup.resx">
       <DependentUpon>LibraryGroup.cs</DependentUpon>

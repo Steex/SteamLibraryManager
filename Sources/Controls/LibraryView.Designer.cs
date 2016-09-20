@@ -38,9 +38,13 @@
 			this.labelPath = new System.Windows.Forms.Label();
 			this.cellTooltipTimer = new System.Windows.Forms.Timer(this.components);
 			this.cellTooltip = new System.Windows.Forms.ToolTip(this.components);
+			this.panelFooter = new System.Windows.Forms.Panel();
+			this.labelDriveFreeSpace = new System.Windows.Forms.Label();
+			this.labelDriveName = new System.Windows.Forms.Label();
 			this.dataGrid = new SteamLibraryManager.Controls.DataGridViewEx();
 			this.layout.SuspendLayout();
 			this.panelHeader.SuspendLayout();
+			this.panelFooter.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -48,6 +52,7 @@
 			// 
 			this.layout.ColumnCount = 1;
 			this.layout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.layout.Controls.Add(this.panelFooter, 0, 2);
 			this.layout.Controls.Add(this.panelHeader, 0, 0);
 			this.layout.Controls.Add(this.dataGrid, 0, 1);
 			this.layout.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -56,7 +61,7 @@
 			this.layout.RowCount = 3;
 			this.layout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
 			this.layout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.layout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.layout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
 			this.layout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.layout.Size = new System.Drawing.Size(280, 102);
 			this.layout.TabIndex = 0;
@@ -80,7 +85,6 @@
 			// labelNewSize
 			// 
 			this.labelNewSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelNewSize.ForeColor = System.Drawing.Color.Red;
 			this.labelNewSize.Location = new System.Drawing.Point(177, 35);
 			this.labelNewSize.Name = "labelNewSize";
 			this.labelNewSize.Size = new System.Drawing.Size(98, 13);
@@ -101,7 +105,6 @@
 			// labelNewCount
 			// 
 			this.labelNewCount.AutoSize = true;
-			this.labelNewCount.ForeColor = System.Drawing.Color.Red;
 			this.labelNewCount.Location = new System.Drawing.Point(3, 35);
 			this.labelNewCount.Name = "labelNewCount";
 			this.labelNewCount.Size = new System.Drawing.Size(69, 13);
@@ -121,6 +124,7 @@
 			// 
 			this.labelPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.labelPath.Location = new System.Drawing.Point(3, 3);
 			this.labelPath.Name = "labelPath";
 			this.labelPath.Size = new System.Drawing.Size(272, 13);
@@ -131,6 +135,38 @@
 			// 
 			this.cellTooltipTimer.Interval = 1000;
 			this.cellTooltipTimer.Tick += new System.EventHandler(this.tooltipTimer_Tick);
+			// 
+			// panelFooter
+			// 
+			this.panelFooter.BackColor = System.Drawing.Color.Silver;
+			this.panelFooter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panelFooter.Controls.Add(this.labelDriveName);
+			this.panelFooter.Controls.Add(this.labelDriveFreeSpace);
+			this.panelFooter.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelFooter.Location = new System.Drawing.Point(0, 80);
+			this.panelFooter.Margin = new System.Windows.Forms.Padding(0);
+			this.panelFooter.Name = "panelFooter";
+			this.panelFooter.Size = new System.Drawing.Size(280, 22);
+			this.panelFooter.TabIndex = 5;
+			// 
+			// labelDriveFreeSpace
+			// 
+			this.labelDriveFreeSpace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelDriveFreeSpace.Location = new System.Drawing.Point(142, 3);
+			this.labelDriveFreeSpace.Name = "labelDriveFreeSpace";
+			this.labelDriveFreeSpace.Size = new System.Drawing.Size(133, 13);
+			this.labelDriveFreeSpace.TabIndex = 0;
+			this.labelDriveFreeSpace.Text = "<FreeSpace>";
+			this.labelDriveFreeSpace.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// labelDriveName
+			// 
+			this.labelDriveName.AutoSize = true;
+			this.labelDriveName.Location = new System.Drawing.Point(3, 3);
+			this.labelDriveName.Name = "labelDriveName";
+			this.labelDriveName.Size = new System.Drawing.Size(44, 13);
+			this.labelDriveName.TabIndex = 0;
+			this.labelDriveName.Text = "<Drive>";
 			// 
 			// dataGrid
 			// 
@@ -154,7 +190,7 @@
 			this.dataGrid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.dataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGrid.ShowCellToolTips = false;
-			this.dataGrid.Size = new System.Drawing.Size(280, 24);
+			this.dataGrid.Size = new System.Drawing.Size(280, 22);
 			this.dataGrid.TabIndex = 4;
 			this.dataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGrid_CellFormatting);
 			this.dataGrid.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellMouseEnter);
@@ -175,6 +211,8 @@
 			this.layout.ResumeLayout(false);
 			this.panelHeader.ResumeLayout(false);
 			this.panelHeader.PerformLayout();
+			this.panelFooter.ResumeLayout(false);
+			this.panelFooter.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
 			this.ResumeLayout(false);
 
@@ -192,5 +230,8 @@
 		private DataGridViewEx dataGrid;
 		private System.Windows.Forms.Timer cellTooltipTimer;
 		private System.Windows.Forms.ToolTip cellTooltip;
+		private System.Windows.Forms.Panel panelFooter;
+		private System.Windows.Forms.Label labelDriveFreeSpace;
+		private System.Windows.Forms.Label labelDriveName;
 	}
 }

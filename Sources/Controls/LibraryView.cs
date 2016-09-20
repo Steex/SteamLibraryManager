@@ -52,6 +52,8 @@ namespace SteamLibraryManager.Controls
 
 
 		private SteamData SteamData { get; set; }
+		private IEnumerable<SteamApp> CurrentApps { get { return SteamData.Apps.Where(a => a.OriginalLibrary == Library); } }
+		private IEnumerable<SteamApp> TargetApps { get { return SteamData.Apps.Where(a => a.TargetLibrary == Library); } }
 		public SteamLibrary Library { get; private set; }
 
 
@@ -62,26 +64,13 @@ namespace SteamLibraryManager.Controls
 			SteamData = steamData;
 			Library = library;
 
-			IEnumerable<SteamApp> libraryApps = SteamData.Apps.Where(a => a.OriginalLibrary == Library);
-
 			// Init labels.
-			long totalSize = 0;
-			int totalCount = 0;
-
-			foreach (SteamApp app in libraryApps)
-			{
-				totalSize += app.Size;
-				totalCount += 1;
-			}
-
-			labelPath.Text = library.Name;
-			labelCurrentCount.Text = string.Format("{0} app(s)", totalCount);
-			labelCurrentSize.Text = Utils.FormatGbSize(totalSize);
+			UpdateLabels();
 
 			// Init grid
 			gridViewItems = new BindingList<GridViewItem>();
 
-			foreach (SteamApp app in libraryApps)
+			foreach (SteamApp app in TargetApps)
 			{
 				gridViewItems.Add(new GridViewItem(app));
 			}
@@ -93,6 +82,57 @@ namespace SteamLibraryManager.Controls
 			dataGrid.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
 			dataGrid.ClearSelection();
+		}
+
+
+		private void UpdateLabels()
+		{
+			// Calculate sizes
+			int currentCount = 0;
+			int targetCount = 0;
+			long currentSize = 0;
+			long targetSize = 0;
+
+			long spaceToFree = 0;
+			long spaceToOccupy = 0;
+
+			foreach (SteamApp app in CurrentApps)
+			{
+				currentCount += 1;
+				currentSize += app.Size;
+
+				if (app.OriginalLibrary.Drive != app.TargetLibrary.Drive)
+				{
+					spaceToFree += app.Size;
+				}
+			}
+
+			foreach (SteamApp app in TargetApps)
+			{
+				targetCount += 1;
+				targetSize += app.Size;
+
+				if (app.OriginalLibrary.Drive != app.TargetLibrary.Drive)
+				{
+					spaceToOccupy += app.Size;
+				}
+			}
+
+			// Calculating the remaining space of the drive
+			DriveInfo driveInfo = new DriveInfo(Library.Drive);
+			long targetFreeSpace = driveInfo.AvailableFreeSpace + spaceToFree - spaceToOccupy;
+
+			// Update labels.
+			labelPath.Text = Library.Name;
+			labelCurrentCount.Text = string.Format("{0} app(s)", currentCount);
+			labelCurrentSize.Text = Utils.FormatGbSize(currentSize);
+			labelNewCount.Text = string.Format("{0} app(s)", targetCount);
+			labelNewSize.Text = Utils.FormatGbSize(targetSize);
+
+			labelDriveName.Text = string.Format("Physical drive: {0}", Library.Drive);
+			labelDriveFreeSpace.Text = string.Format("{0}", Utils.FormatGbSize(targetFreeSpace));
+
+			labelDriveFreeSpace.ForeColor = targetFreeSpace >= 0 ? SystemColors.ControlText : Color.Red;
 		}
 
 
@@ -151,6 +191,9 @@ namespace SteamLibraryManager.Controls
 						
 						// Suppress the automatic selection.
 						dataGrid.ClearSelection();
+
+						// Update the counters.
+						UpdateLabels();
 					}
 				}
 			}
@@ -204,6 +247,9 @@ namespace SteamLibraryManager.Controls
 					{
 						app.TargetLibrary = Library;
 					}
+
+					// Update the counters.
+					UpdateLabels();
 				}
 			}
 		}

@@ -64,6 +64,8 @@ namespace SteamLibraryManager.Controls
 			SteamData = steamData;
 			Library = library;
 
+			SteamData.AppTargetLibraryChanged += SteamApp_TargetLibraryChanged;
+
 			// Init labels.
 			UpdateLabels();
 
@@ -84,6 +86,20 @@ namespace SteamLibraryManager.Controls
 			dataGrid.ClearSelection();
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				SteamData.AppTargetLibraryChanged -= SteamApp_TargetLibraryChanged;
+
+				if (components != null)
+				{
+					components.Dispose();
+				}
+			}
+			base.Dispose(disposing);
+		}
+
 
 		private void UpdateLabels()
 		{
@@ -92,35 +108,37 @@ namespace SteamLibraryManager.Controls
 			int targetCount = 0;
 			long currentSize = 0;
 			long targetSize = 0;
+			long currentSizeOnDrive = 0;
+			long targetSizeOnDrive = 0;
 
-			long spaceToFree = 0;
-			long spaceToOccupy = 0;
-
-			foreach (SteamApp app in CurrentApps)
+			foreach (SteamApp app in SteamData.Apps)
 			{
-				currentCount += 1;
-				currentSize += app.Size;
-
-				if (app.OriginalLibrary.Drive != app.TargetLibrary.Drive)
+				if (app.OriginalLibrary == Library)
 				{
-					spaceToFree += app.Size;
+					currentCount += 1;
+					currentSize += app.Size;
 				}
-			}
 
-			foreach (SteamApp app in TargetApps)
-			{
-				targetCount += 1;
-				targetSize += app.Size;
-
-				if (app.OriginalLibrary.Drive != app.TargetLibrary.Drive)
+				if (app.TargetLibrary == Library)
 				{
-					spaceToOccupy += app.Size;
+					targetCount += 1;
+					targetSize += app.Size;
+				}
+
+				if (app.OriginalLibrary.Drive == Library.Drive)
+				{
+					currentSizeOnDrive += app.Size;
+				}
+
+				if (app.TargetLibrary.Drive == Library.Drive)
+				{
+					targetSizeOnDrive += app.Size;
 				}
 			}
 
 			// Calculating the remaining space of the drive
 			DriveInfo driveInfo = new DriveInfo(Library.Drive);
-			long targetFreeSpace = driveInfo.AvailableFreeSpace + spaceToFree - spaceToOccupy;
+			long targetFreeSpace = driveInfo.AvailableFreeSpace + (currentSizeOnDrive - targetSizeOnDrive);
 
 			// Update labels.
 			labelPath.Text = Library.Name;
@@ -191,9 +209,6 @@ namespace SteamLibraryManager.Controls
 						
 						// Suppress the automatic selection.
 						dataGrid.ClearSelection();
-
-						// Update the counters.
-						UpdateLabels();
 					}
 				}
 			}
@@ -247,9 +262,6 @@ namespace SteamLibraryManager.Controls
 					{
 						app.TargetLibrary = Library;
 					}
-
-					// Update the counters.
-					UpdateLabels();
 				}
 			}
 		}
@@ -327,6 +339,11 @@ namespace SteamLibraryManager.Controls
 			// Remember the size and prevent the tooltip from displaying.
 			cellTooltipSize = e.ToolTipSize;
 			e.Cancel = true;
+		}
+
+		private void SteamApp_TargetLibraryChanged(SteamApp app)
+		{
+			UpdateLabels();
 		}
 	}
 }

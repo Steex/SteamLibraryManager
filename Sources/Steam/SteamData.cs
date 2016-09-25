@@ -8,8 +8,9 @@ namespace SteamLibraryManager
 {
 	public class SteamData
 	{
-		private string installDir;
+		public event SteamAppChangedEventHandler AppTargetLibraryChanged;
 
+		private string installDir;
 
 		public List<SteamLibrary> Libraries { get; private set; }
 		public List<SteamApp> Apps{ get; private set; }
@@ -53,9 +54,12 @@ namespace SteamLibraryManager
 			{
 				foreach (string manifestPath in Directory.GetFiles(library.Path, "appmanifest_*.acf"))
 				{
-					Apps.Add(new SteamApp(library, System.IO.Path.GetFileName(manifestPath)));
+					SteamApp app = new SteamApp(library, System.IO.Path.GetFileName(manifestPath));
+					app.TargetLibraryChanged += a => { if (AppTargetLibraryChanged != null) AppTargetLibraryChanged(app); };
+					Apps.Add(app);
 				}
 			}
 		}
+
 	}
 }

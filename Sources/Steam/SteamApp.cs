@@ -6,10 +6,32 @@ using System.IO;
 
 namespace SteamLibraryManager
 {
+	public delegate void SteamAppChangedEventHandler(SteamApp app);
+
+
 	public class SteamApp
 	{
+		public event SteamAppChangedEventHandler TargetLibraryChanged;
+
+
+		private SteamLibrary targetLibrary;
+
 		public SteamLibrary OriginalLibrary { get; private set; }
-		public SteamLibrary TargetLibrary { get; set; }
+		public SteamLibrary TargetLibrary
+		{
+			get
+			{
+				return targetLibrary;
+			}
+			set
+			{
+				if (targetLibrary != value)
+				{
+					targetLibrary = value;
+					OnTargetLibraryChanged();
+				}
+			}
+		}
 		public string Id { get; private set; }
 		public string Name { get; private set; }
 		public string InstallDir { get; private set; }
@@ -40,5 +62,14 @@ namespace SteamLibraryManager
 			DirectoryInfo installDirectory = new DirectoryInfo(installPath);
 			Size = installDirectory.EnumerateFiles("*.*", SearchOption.AllDirectories).Aggregate(0L, (s, f) => s += f.Length);
 		}
+
+		protected virtual void OnTargetLibraryChanged()
+		{
+			if (TargetLibraryChanged != null)
+			{
+				TargetLibraryChanged(this);
+			}
+		}
+
 	}
 }

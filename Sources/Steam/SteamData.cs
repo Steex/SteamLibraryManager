@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading;
 
 namespace SteamLibraryManager
 {
 	public class SteamData
 	{
+		public delegate void ProgressChangedEventHandler(int percent);
+
 		public event SteamAppChangedEventHandler AppTargetLibraryChanged;
 
 		private string installDir;
@@ -16,7 +19,7 @@ namespace SteamLibraryManager
 		public List<SteamApp> Apps{ get; private set; }
 
 
-		public SteamData(string installDir)
+		public SteamData(string installDir, ProgressChangedEventHandler onLoadProgerss = null)
 		{
 			this.installDir = installDir;
 
@@ -48,7 +51,14 @@ namespace SteamLibraryManager
 			}
 
 			// Read applications information.
+			int appCount = Libraries.Aggregate(0, (count, lib) => count + Directory.GetFiles(lib.Path, "appmanifest_*.acf").Count());
+			int appLoaded = 0;
+
 			Apps = new List<SteamApp>();
+			if (onLoadProgerss != null)
+			{
+				onLoadProgerss(0);
+			}
 
 			foreach (SteamLibrary library in Libraries)
 			{
@@ -57,6 +67,12 @@ namespace SteamLibraryManager
 					SteamApp app = new SteamApp(library, System.IO.Path.GetFileName(manifestPath));
 					app.TargetLibraryChanged += a => { if (AppTargetLibraryChanged != null) AppTargetLibraryChanged(app); };
 					Apps.Add(app);
+
+					appLoaded += 1;
+					if (onLoadProgerss != null)
+					{
+						onLoadProgerss((int)((float)appLoaded / (float)appCount * 100f));
+					}
 				}
 			}
 		}

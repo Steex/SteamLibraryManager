@@ -17,9 +17,40 @@ namespace SteamLibraryManager
 		{
 			InitializeComponent();
 			InitializeActions();
+		}
 
-			SteamData steamData = new SteamData(Config.Main.SteamPath);
-			libraryView.SteamData = steamData;
+		protected override void OnShown(EventArgs e)
+		{
+			base.OnShown(e);
+
+			ReadSteamData();
+		}
+
+
+		private void ReadSteamData()
+		{
+			using (BackgroundWorker worker = new BackgroundWorker())
+			{
+				worker.WorkerReportsProgress = true;
+				worker.DoWork += ReadSteamDataWorker_DoWork;
+				worker.RunWorkerCompleted += ReadSteamDataWorker_Completed;
+
+				StartLoaderForm progressForm = new StartLoaderForm(worker);
+				progressForm.Show(this);
+
+				worker.RunWorkerAsync(Config.Main.SteamPath);
+			}
+		}
+
+		private void ReadSteamDataWorker_DoWork(object sender, DoWorkEventArgs e)
+		{
+			SteamData steamData = new SteamData((string)e.Argument, (p) => (sender as BackgroundWorker).ReportProgress(p));
+			e.Result = steamData;
+		}
+
+		private void ReadSteamDataWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
+		{
+			libraryView.SteamData = (SteamData)e.Result;
 		}
 	}
 }

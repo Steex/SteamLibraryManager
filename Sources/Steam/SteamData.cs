@@ -102,5 +102,8 @@ namespace SteamLibraryManager
 			}
 		}
 
+		public void ApplyChanges()
+		{
+		}
 	}
 }

@@ -74,6 +74,13 @@ namespace SteamLibraryManager
 
 		private void actionApplyChanges_Execute(object sender, EventArgs e)
 		{
+			if (PlatformUtils.SteamIsRunning())
+			{
+				Utils.ShowWarningMessage(this, "Cannot move applications while Steam is running.\r\nPlease unload the Steam client and retry.");
+				return;
+			}
+
+			libraryView.SteamData.ApplyChanges();
 		}
 
 		private void actionOptions_Execute(object sender, EventArgs e)

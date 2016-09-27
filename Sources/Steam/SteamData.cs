@@ -22,6 +22,13 @@ namespace SteamLibraryManager
 
 		public List<SteamLibrary> Libraries { get; private set; }
 		public List<SteamApp> Apps{ get; private set; }
+		public bool HasPendingChanges
+		{
+			get
+			{
+				return Apps.Any(app => app.OriginalLibrary != app.TargetLibrary);
+			}
+		}
 
 
 		public SteamData(string installDir, ProgressChangedEventHandler onLoadProgerss = null)

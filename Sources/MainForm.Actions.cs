@@ -61,6 +61,10 @@ namespace SteamLibraryManager
 
 		private void actionDiscardChanges_Execute(object sender, EventArgs e)
 		{
+			if (Utils.ShowQuestion(this, "Discard all pending operations?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				libraryView.SteamData.DiscardChanges();
+			}
 		}
 
 		private void actionApplyChanges_Execute(object sender, EventArgs e)

@@ -64,18 +64,14 @@ namespace SteamLibraryManager.Controls
 			SteamData = steamData;
 			Library = library;
 
+			SteamData.ChangesDiscarded += SteamData_ChangesDiscarded;
 			SteamData.AppTargetLibraryChanged += SteamApp_TargetLibraryChanged;
 
 			// Init labels.
-			UpdateLabels();
+			UpdateHeader();
 
 			// Init grid
 			gridViewItems = new BindingList<GridViewItem>();
-
-			foreach (SteamApp app in TargetApps)
-			{
-				gridViewItems.Add(new GridViewItem(app));
-			}
 
 			dataGrid.DataSource = gridViewItems;
 			dataGrid.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -83,13 +79,14 @@ namespace SteamLibraryManager.Controls
 			dataGrid.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 			dataGrid.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-			dataGrid.ClearSelection();
+			UpdateAppList();
 		}
-
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				SteamData.ChangesDiscarded -= SteamData_ChangesDiscarded;
 				SteamData.AppTargetLibraryChanged -= SteamApp_TargetLibraryChanged;
 
 				if (components != null)
@@ -97,11 +94,12 @@ namespace SteamLibraryManager.Controls
 					components.Dispose();
 				}
 			}
+
 			base.Dispose(disposing);
 		}
 
 
-		private void UpdateLabels()
+		private void UpdateHeader()
 		{
 			// Calculate sizes
 			int currentCount = 0;
@@ -152,6 +150,21 @@ namespace SteamLibraryManager.Controls
 			labelDriveName.Text = string.Format("Physical drive: {0}", Library.Drive);
 
 			labelTargetFreeSpace.ForeColor = targetFreeSpace >= 0 ? SystemColors.ControlText : Color.Red;
+		}
+
+		private void UpdateAppList()
+		{
+			// Remove existing data.
+			gridViewItems.Clear();
+
+			// Create new app records.
+			foreach (SteamApp app in TargetApps)
+			{
+				gridViewItems.Add(new GridViewItem(app));
+			}
+
+			// Clear initial selection from the grid.
+			dataGrid.ClearSelection();
 		}
 
 
@@ -342,9 +355,15 @@ namespace SteamLibraryManager.Controls
 			e.Cancel = true;
 		}
 
+
+		private void SteamData_ChangesDiscarded(SteamData data)
+		{
+			UpdateAppList();
+		}
+
 		private void SteamApp_TargetLibraryChanged(SteamApp app)
 		{
-			UpdateLabels();
+			UpdateHeader();
 		}
 	}
 }

@@ -7,11 +7,16 @@ using System.Threading;
 
 namespace SteamLibraryManager
 {
+	public delegate void SteamDataChangedEventHandler(SteamData data);
+
+
 	public class SteamData
 	{
 		public delegate void ProgressChangedEventHandler(int percent);
 
+		public event SteamDataChangedEventHandler ChangesDiscarded;
 		public event SteamAppChangedEventHandler AppTargetLibraryChanged;
+
 
 		private string installDir;
 
@@ -74,6 +79,19 @@ namespace SteamLibraryManager
 						onLoadProgerss((int)((float)appLoaded / (float)appCount * 100f));
 					}
 				}
+			}
+		}
+
+		public void DiscardChanges()
+		{
+			foreach (SteamApp app in Apps)
+			{
+				app.TargetLibrary = app.OriginalLibrary;
+			}
+
+			if (ChangesDiscarded != null)
+			{
+				ChangesDiscarded(this);
 			}
 		}
 

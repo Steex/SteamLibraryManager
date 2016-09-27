@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SteamLibraryManager")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Steam Library Manager")]
+[assembly: AssemblyDescription("A simple tool to move Steam applications between libraries.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SteamLibraryManager")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyProduct("Steam Library Manager")]
+[assembly: AssemblyCopyright("Copyright © 2016 Sergey Sotnikov")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -56,6 +56,7 @@ namespace SteamLibraryManager
 
 		private void actionReloadLibraries_Execute(object sender, EventArgs e)
 		{
+			ReadSteamData();
 		}
 
 		private void actionDiscardChanges_Execute(object sender, EventArgs e)

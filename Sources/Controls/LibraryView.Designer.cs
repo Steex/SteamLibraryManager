@@ -121,6 +121,7 @@
 			this.headerLayout.Controls.Add(this.label3, 1, 1);
 			this.headerLayout.Controls.Add(this.label2, 2, 1);
 			this.headerLayout.Location = new System.Drawing.Point(3, 3);
+			this.headerLayout.MaximumSize = new System.Drawing.Size(300, 65);
 			this.headerLayout.Name = "headerLayout";
 			this.headerLayout.RowCount = 4;
 			this.headerLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));

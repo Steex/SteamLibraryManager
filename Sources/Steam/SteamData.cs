@@ -104,6 +104,20 @@ namespace SteamLibraryManager
 
 		public void ApplyChanges()
 		{
+			// Move applications between libraries on the same disk.
+			foreach (SteamApp app in Apps.Where(a => a.TargetLibrary != a.OriginalLibrary && a.TargetLibrary.Drive == a.OriginalLibrary.Drive))
+			{
+				// Move the manifest.
+				string manifestName = string.Format("appmanifest_{0}.acf", app.Id);
+				File.Move(
+					Path.Combine(app.OriginalLibrary.Path, manifestName),
+					Path.Combine(app.TargetLibrary.Path, manifestName));
+
+				// Move the folder.
+				Directory.Move(
+					Path.Combine(app.OriginalLibrary.Path, "common", app.InstallDir),
+					Path.Combine(app.TargetLibrary.Path, "common", app.InstallDir));
+			}
 		}
 	}
 }

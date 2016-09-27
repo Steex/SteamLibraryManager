@@ -45,8 +45,9 @@ namespace SteamLibraryManager.Controls
 			// Remove the existing views.
 			if (layout.ColumnCount > 0)
 			{
-				layout.ColumnCount = 0;
+				layout.Controls.Clear();
 				layout.ColumnStyles.Clear();
+				layout.ColumnCount = 0;
 			}
 
 			// Create new library views.

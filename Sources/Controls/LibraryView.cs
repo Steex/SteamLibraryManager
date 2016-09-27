@@ -26,7 +26,7 @@ namespace SteamLibraryManager.Controls
 			{
 				App = app;
 				Name = app.Name;
-				Size = Utils.FormatGbSize(app.Size);
+				Size = Utils.FormatGbSize(app.Size) + " GB";
 			}
 		}
 
@@ -138,19 +138,20 @@ namespace SteamLibraryManager.Controls
 
 			// Calculating the remaining space of the drive
 			DriveInfo driveInfo = new DriveInfo(Library.Drive);
-			long targetFreeSpace = driveInfo.AvailableFreeSpace + (currentSizeOnDrive - targetSizeOnDrive);
+			long currentFreeSpace = driveInfo.AvailableFreeSpace;
+			long targetFreeSpace = currentFreeSpace + (currentSizeOnDrive - targetSizeOnDrive);
 
 			// Update labels.
 			labelPath.Text = Library.Name;
-			labelCurrentCount.Text = string.Format("{0} app(s)", currentCount);
+			labelCurrentCount.Text = currentCount.ToInvString();
 			labelCurrentSize.Text = Utils.FormatGbSize(currentSize);
-			labelNewCount.Text = string.Format("{0} app(s)", targetCount);
-			labelNewSize.Text = Utils.FormatGbSize(targetSize);
-
+			labelCurrentFreeSpace.Text = Utils.FormatGbSize(currentFreeSpace);
+			labelTargetCount.Text = targetCount.ToInvString();
+			labelTargetSize.Text = Utils.FormatGbSize(targetSize);
+			labelTargetFreeSpace.Text = Utils.FormatGbSize(targetFreeSpace);
 			labelDriveName.Text = string.Format("Physical drive: {0}", Library.Drive);
-			labelDriveFreeSpace.Text = string.Format("{0}", Utils.FormatGbSize(targetFreeSpace));
 
-			labelDriveFreeSpace.ForeColor = targetFreeSpace >= 0 ? SystemColors.ControlText : Color.Red;
+			labelTargetFreeSpace.ForeColor = targetFreeSpace >= 0 ? SystemColors.ControlText : Color.Red;
 		}
 
 
@@ -160,7 +161,7 @@ namespace SteamLibraryManager.Controls
 
 			if (app.TargetLibrary != app.OriginalLibrary)
 			{
-				e.CellStyle.ForeColor = Color.Red;
+				e.CellStyle.ForeColor = Color.Blue;
 			}
 		}
 

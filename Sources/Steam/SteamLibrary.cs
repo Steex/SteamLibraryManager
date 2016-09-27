@@ -17,6 +17,11 @@ namespace SteamLibraryManager
 			Name = path;
 			Path = PlatformUtils.ResolvePath(System.IO.Path.Combine(path, "steamapps"));
 			Drive = System.IO.Path.GetPathRoot(Path).ToUpperInvariant();
+			if (Drive.EndsWith(":\\"))
+			{
+				// Suppose the drive is a disk letter
+				Drive = Drive.Substring(0, 1);
+			}
 		}
 	}
 }

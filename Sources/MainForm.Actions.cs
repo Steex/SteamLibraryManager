@@ -56,7 +56,11 @@ namespace SteamLibraryManager
 
 		private void actionReloadLibraries_Execute(object sender, EventArgs e)
 		{
-			ReadSteamData();
+			if (!libraryView.SteamData.HasPendingChanges ||
+				Utils.ShowQuestion(this, "Discard all pending operations and reload?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				ReadSteamData();
+			}
 		}
 
 		private void actionDiscardChanges_Execute(object sender, EventArgs e)

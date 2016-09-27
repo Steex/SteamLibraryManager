@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,8 +37,13 @@
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip = new System.Windows.Forms.ToolStrip();
+			this.buttonReloadLibraries = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.buttonDiscardChanges = new System.Windows.Forms.ToolStripButton();
+			this.buttonApplyChanges = new System.Windows.Forms.ToolStripButton();
 			this.libraryView = new SteamLibraryManager.Controls.LibraryGroup();
 			this.menuStrip.SuspendLayout();
+			this.toolStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip
@@ -96,11 +102,45 @@
 			// 
 			// toolStrip
 			// 
+			this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buttonReloadLibraries,
+            this.toolStripSeparator1,
+            this.buttonDiscardChanges,
+            this.buttonApplyChanges});
 			this.toolStrip.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(884, 25);
 			this.toolStrip.TabIndex = 1;
 			this.toolStrip.Text = "toolStrip1";
+			// 
+			// buttonReloadLibraries
+			// 
+			this.buttonReloadLibraries.Image = ((System.Drawing.Image)(resources.GetObject("buttonReloadLibraries.Image")));
+			this.buttonReloadLibraries.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttonReloadLibraries.Name = "buttonReloadLibraries";
+			this.buttonReloadLibraries.Size = new System.Drawing.Size(60, 22);
+			this.buttonReloadLibraries.Text = "Reload";
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+			// 
+			// buttonDiscardChanges
+			// 
+			this.buttonDiscardChanges.Image = ((System.Drawing.Image)(resources.GetObject("buttonDiscardChanges.Image")));
+			this.buttonDiscardChanges.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttonDiscardChanges.Name = "buttonDiscardChanges";
+			this.buttonDiscardChanges.Size = new System.Drawing.Size(62, 22);
+			this.buttonDiscardChanges.Text = "Discard";
+			// 
+			// buttonApplyChanges
+			// 
+			this.buttonApplyChanges.Image = ((System.Drawing.Image)(resources.GetObject("buttonApplyChanges.Image")));
+			this.buttonApplyChanges.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttonApplyChanges.Name = "buttonApplyChanges";
+			this.buttonApplyChanges.Size = new System.Drawing.Size(54, 22);
+			this.buttonApplyChanges.Text = "Apply";
 			// 
 			// libraryView
 			// 
@@ -127,6 +167,8 @@
 			this.Text = "Steam Library Manager";
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
+			this.toolStrip.ResumeLayout(false);
+			this.toolStrip.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -143,6 +185,10 @@
 		private System.Windows.Forms.ToolStripMenuItem menuAbout;
 		private System.Windows.Forms.ToolStrip toolStrip;
 		private Controls.LibraryGroup libraryView;
+		private System.Windows.Forms.ToolStripButton buttonDiscardChanges;
+		private System.Windows.Forms.ToolStripButton buttonApplyChanges;
+		private System.Windows.Forms.ToolStripButton buttonReloadLibraries;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 
 	}
 }

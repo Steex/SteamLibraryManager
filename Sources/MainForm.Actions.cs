@@ -9,6 +9,9 @@ namespace SteamLibraryManager
 	partial class MainForm
 	{
 		private SteamLibraryManager.Action actionExit;
+		private SteamLibraryManager.Action actionReloadLibraries;
+		private SteamLibraryManager.Action actionDiscardChanges;
+		private SteamLibraryManager.Action actionApplyChanges;
 		private SteamLibraryManager.Action actionOptions;
 		private SteamLibraryManager.Action actionAbout;
 
@@ -17,6 +20,21 @@ namespace SteamLibraryManager
 			actionExit = new SteamLibraryManager.Action("E&xit");
 			actionExit.AttachToolItem(menuExit);
 			actionExit.Execute += actionExit_Execute;
+
+			actionReloadLibraries = new SteamLibraryManager.Action("&Reload", "Read Steam libraries info");
+			//actionReloadLibraries.AttachToolItem(menuOptions);
+			actionReloadLibraries.AttachToolItem(buttonReloadLibraries);
+			actionReloadLibraries.Execute += actionReloadLibraries_Execute;
+
+			actionDiscardChanges = new SteamLibraryManager.Action("&Discard", "Discard all changed made to libraries");
+			//actionDiscardChanged.AttachToolItem(menuOptions);
+			actionDiscardChanges.AttachToolItem(buttonDiscardChanges);
+			actionDiscardChanges.Execute += actionDiscardChanges_Execute;
+
+			actionApplyChanges = new SteamLibraryManager.Action("&Apply", "Start to move Steam apps");
+			//actionApplyChanges.AttachToolItem(menuOptions);
+			actionApplyChanges.AttachToolItem(buttonApplyChanges);
+			actionApplyChanges.Execute += actionApplyChanges_Execute;
 
 			actionOptions = new SteamLibraryManager.Action("&Options...", "Display the configuration dialog");
 			actionOptions.AttachToolItem(menuOptions);
@@ -34,6 +52,18 @@ namespace SteamLibraryManager
 		private void actionExit_Execute(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		private void actionReloadLibraries_Execute(object sender, EventArgs e)
+		{
+		}
+
+		private void actionDiscardChanges_Execute(object sender, EventArgs e)
+		{
+		}
+
+		private void actionApplyChanges_Execute(object sender, EventArgs e)
+		{
 		}
 
 		private void actionOptions_Execute(object sender, EventArgs e)

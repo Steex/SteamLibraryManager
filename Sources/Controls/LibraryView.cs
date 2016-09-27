@@ -158,7 +158,7 @@ namespace SteamLibraryManager.Controls
 			gridViewItems.Clear();
 
 			// Create new app records.
-			foreach (SteamApp app in TargetApps)
+			foreach (SteamApp app in TargetApps.OrderBy(app => app.Name))
 			{
 				gridViewItems.Add(new GridViewItem(app));
 			}

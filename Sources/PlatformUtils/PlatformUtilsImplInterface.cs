@@ -7,6 +7,7 @@ namespace SteamLibraryManager.Details
 {
 	internal interface IPlatformUtilsImpl
 	{
+		bool SteamIsRunning();
 		string ResolvePath(string path);
 	}
 }

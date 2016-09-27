@@ -15,6 +15,12 @@ namespace SteamLibraryManager
 		private static Details.IPlatformUtilsImpl impl = null;
 
 
+		public static bool SteamIsRunning()
+		{
+			return impl.SteamIsRunning();
+		}
+
+
 		public static string ResolvePath(string path)
 		{
 			return impl.ResolvePath(path);

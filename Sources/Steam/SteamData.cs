@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading;
+using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace SteamLibraryManager
 {
@@ -16,6 +18,7 @@ namespace SteamLibraryManager
 
 		public event SteamDataChangedEventHandler ChangesDiscarded;
 		public event SteamAppChangedEventHandler AppTargetLibraryChanged;
+		public event SteamAppChangedEventHandler AppMoved;
 
 
 		private string installDir;
@@ -102,22 +105,78 @@ namespace SteamLibraryManager
 			}
 		}
 
-		public void ApplyChanges()
+		public void ApplyChanges(Form calleeForm)
 		{
-			// Move applications between libraries on the same disk.
-			foreach (SteamApp app in Apps.Where(a => a.TargetLibrary != a.OriginalLibrary && a.TargetLibrary.Drive == a.OriginalLibrary.Drive))
-			{
-				// Move the manifest.
-				string manifestName = string.Format("appmanifest_{0}.acf", app.Id);
-				File.Move(
-					Path.Combine(app.OriginalLibrary.Path, manifestName),
-					Path.Combine(app.TargetLibrary.Path, manifestName));
+			ApplyChanges_Start(calleeForm);
+		}
 
-				// Move the folder.
-				Directory.Move(
-					Path.Combine(app.OriginalLibrary.Path, "common", app.InstallDir),
-					Path.Combine(app.TargetLibrary.Path, "common", app.InstallDir));
+
+		private void ApplyChanges_Start(Form calleeForm)
+		{
+			using (BackgroundWorker worker = new BackgroundWorker())
+			{
+				worker.WorkerReportsProgress = true;
+				worker.DoWork += ApplyChangesWorker_DoWork;
+				worker.RunWorkerCompleted += ApplyChangesWorker_Completed;
+
+				MoveProgressForm progressForm = new MoveProgressForm(worker);
+				progressForm.Show(calleeForm);
+
+				worker.RunWorkerAsync(Config.Main.SteamPath);
 			}
+		}
+
+		private void ApplyChangesWorker_DoWork(object sender, DoWorkEventArgs e)
+		{
+			List<SteamApp> pendingApps = Apps.Where(a => a.TargetLibrary != a.OriginalLibrary).ToList();
+			int appsMoved = 0;
+
+			foreach (SteamApp app in pendingApps)
+			{
+				(sender as BackgroundWorker).ReportProgress(0, new MoveProgressForm.DisplayData(app.Name, appsMoved + 1, pendingApps.Count));
+				
+				try
+				{
+					string manifestName = string.Format("appmanifest_{0}.acf", app.Id);
+					string originalManifestPath = Path.Combine(app.OriginalLibrary.Path, manifestName);
+					string targetManifestPath = Path.Combine(app.TargetLibrary.Path, manifestName);
+
+					string originalDirectoryPath = Path.Combine(app.OriginalLibrary.Path, "common", app.InstallDir);
+					string targetDirectoryPath = Path.Combine(app.TargetLibrary.Path, "common", app.InstallDir);
+
+					if (app.TargetLibrary.Drive == app.OriginalLibrary.Drive)
+					{
+						// Fast move applications between libraries on the same disk.
+						Directory.Move(originalDirectoryPath, targetDirectoryPath);
+						File.Move(originalManifestPath, targetManifestPath);
+					}
+					else
+					{
+						// Copy and delete applications on different disks.
+						Utils.SafeMoveDirectory(originalDirectoryPath, targetDirectoryPath);
+						File.Move(originalManifestPath, targetManifestPath);
+					}
+				}
+				catch (System.Exception ex)
+				{
+					int n = 5;
+				}
+
+				app.ApplyMoving();
+
+				if (AppMoved != null)
+				{
+					AppMoved(app);
+				}
+
+				++appsMoved;
+			}
+
+			(sender as BackgroundWorker).ReportProgress(0, new MoveProgressForm.DisplayData("", pendingApps.Count, pendingApps.Count));
+		}
+		
+		private void ApplyChangesWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
+		{
 		}
 	}
 }

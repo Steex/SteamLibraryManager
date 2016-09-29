@@ -66,6 +66,7 @@ namespace SteamLibraryManager.Controls
 
 			SteamData.ChangesDiscarded += SteamData_ChangesDiscarded;
 			SteamData.AppTargetLibraryChanged += SteamApp_TargetLibraryChanged;
+			SteamData.AppMoved += SteamApp_Moved;
 
 			// Init labels.
 			UpdateHeader();
@@ -88,6 +89,7 @@ namespace SteamLibraryManager.Controls
 			{
 				SteamData.ChangesDiscarded -= SteamData_ChangesDiscarded;
 				SteamData.AppTargetLibraryChanged -= SteamApp_TargetLibraryChanged;
+				SteamData.AppMoved -= SteamApp_Moved;
 
 				if (components != null)
 				{
@@ -364,6 +366,11 @@ namespace SteamLibraryManager.Controls
 		private void SteamApp_TargetLibraryChanged(SteamApp app)
 		{
 			UpdateHeader();
+		}
+
+		private void SteamApp_Moved(SteamApp app)
+		{
+			dataGrid.Invoke((MethodInvoker)(() => dataGrid.Invalidate()));
 		}
 	}
 }

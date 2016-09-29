@@ -9,9 +9,24 @@ using System.Windows.Forms;
 
 namespace SteamLibraryManager
 {
-	public partial class StartLoaderForm : Form
+	public partial class MoveProgressForm : Form
 	{
-		public StartLoaderForm(BackgroundWorker worker)
+		public class DisplayData
+		{
+			public string AppName { get; private set; }
+			public int AppIndex { get; private set; }
+			public int AppCount { get; private set; }
+
+			public DisplayData(string appName, int appIndex, int appCount)
+			{
+				AppName = appName;
+				AppIndex = appIndex;
+				AppCount = appCount;
+			}
+		}
+
+
+		public MoveProgressForm(BackgroundWorker worker)
 		{
 			InitializeComponent();
 
@@ -33,7 +48,12 @@ namespace SteamLibraryManager
 
 		private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
-			progressBar.Value = e.ProgressPercentage;
+			DisplayData data = (DisplayData)e.UserState;
+			int progress = (int)((float)(data.AppIndex - 1) / (float)data.AppCount * 100f);
+
+			labelProgress.Text = string.Format("Move application {0} of {1}", data.AppIndex, data.AppCount);
+			labelMovingApp.Text = data.AppName;
+			progressBar.Value = progress;
 		}
 
 		private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

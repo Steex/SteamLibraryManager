@@ -63,6 +63,11 @@ namespace SteamLibraryManager
 			Size = installDirectory.EnumerateFiles("*.*", SearchOption.AllDirectories).Aggregate(0L, (s, f) => s += f.Length);
 		}
 
+		public void ApplyMoving()
+		{
+			OriginalLibrary = TargetLibrary;
+		}
+
 		protected virtual void OnTargetLibraryChanged()
 		{
 			if (TargetLibraryChanged != null)

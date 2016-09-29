@@ -275,7 +275,7 @@ namespace SteamLibraryManager
 			return path;
 		}
 
-		public static void MoveFile(string sourcePath, string targetPath)
+		public static void SafeMoveFile(string sourcePath, string targetPath)
 		{
 			if (File.Exists(targetPath))
 			{
@@ -286,6 +286,61 @@ namespace SteamLibraryManager
 			{
 				File.Move(sourcePath, targetPath);
 			}
+		}
+
+		public static void SafeMoveDirectory(string sourcePath, string targetPath)
+		{
+			if (sourcePath == null)
+			{
+				throw new ArgumentNullException("sourcePath");
+			}
+
+			if (targetPath == null)
+			{
+				throw new ArgumentNullException("targetPath");
+			}
+
+			if (string.IsNullOrWhiteSpace(sourcePath) || sourcePath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+			{
+				throw new ArgumentException("The source path is invalid.", "sourcePath");
+			}
+
+			if (string.IsNullOrWhiteSpace(targetPath) || targetPath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+			{
+				throw new ArgumentException("The target path is invalid.", "targetPath");
+			}
+
+			if (!Directory.Exists(sourcePath))
+			{
+				throw new DirectoryNotFoundException(string.Format("The source path \"{0}\" cannot be accessed.", sourcePath));
+			}
+
+			if (Directory.Exists(targetPath))
+			{
+				throw new IOException(string.Format("The destination path \"{0}\" already exists.", targetPath));
+			}
+
+			// Recursively copy all files to the destination path.
+			Directory.CreateDirectory(targetPath);
+
+			DirectoryInfo sourceDirectory = new DirectoryInfo(sourcePath);
+			foreach (FileSystemInfo fileSystemInfo in sourceDirectory.EnumerateFileSystemInfos("*", SearchOption.AllDirectories))
+			{
+				string objectSourcePath = fileSystemInfo.FullName;
+				string objectTargetPath = Path.Combine(targetPath, GetRelativePath(objectSourcePath, sourcePath));
+
+				if (fileSystemInfo is DirectoryInfo)
+				{
+					Directory.CreateDirectory(objectTargetPath);
+				}
+				else if (fileSystemInfo is FileInfo)
+				{
+					File.Copy(objectSourcePath, objectTargetPath);
+				}
+			}
+
+			// Delete original files.
+			Directory.Delete(sourcePath, true);
 		}
 
 		/// <summary>

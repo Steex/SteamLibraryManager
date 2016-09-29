@@ -63,6 +63,12 @@
     <Compile Include="Controls\LibraryView.Designer.cs">
       <DependentUpon>LibraryView.cs</DependentUpon>
     </Compile>
+    <Compile Include="MoveProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MoveProgressForm.Designer.cs">
+      <DependentUpon>MoveProgressForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="StartLoaderForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\LibraryView.resx">
       <DependentUpon>LibraryView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MoveProgressForm.resx">
+      <DependentUpon>MoveProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StartLoaderForm.resx">
       <DependentUpon>StartLoaderForm.cs</DependentUpon>
